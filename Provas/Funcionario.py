@@ -72,29 +72,39 @@ class Funcionario:
         arq_funcao.close()
         return aux
 
-
-    #letra b)
-    def busca_codigo(self, lista, cod: str):
-        #cod = cod[2:] #retira sufixo indicativo de binario 0b||1b
-        comparacoes = 0
-        start_time = time.time() #Inicia o timer para contar o tempo de execucao do algoritmo
-        
+    #letra b) ATUALIZADA
+    def busca_codigo(self, funcionarios, cod):
+        '''Recebe uma lista de objetos funcionario, um codigo em binario, faz a busca pelo funcionario deste codigo e o retorna (objeto)'''
+        cod = cod[2:]
         for i in range(100):
-            if "|" in lista[i][1]: #checa se o numero eh de um digito e faz a correcao de busca
-                if cod == lista[i][0]:
-                    print("Dados do funcionario: ", lista[i], "\nTotal de comparacoes: ", comparacoes, "\nTempo gasto: %.10f" % (time.time() - start_time))
-                    return lista[i]
-            if cod == lista[i][:2]:
-                print(lista[i][:2])
-                print("Dados do funcionario: ", lista[i], "\nTotal de comparacoes: ", comparacoes, "\nTempo gasto: %.10f" % (time.time() - start_time))
-                return lista[i]
-            else:
-                comparacoes = comparacoes + 1
-            if i == 99:
-                return "Codigo de funcionario invalido ou inexistente!"
+            print("cod_func: ", funcionarios[i].cod, "cod_busca: ", cod)
+            if funcionarios[i].cod == cod:
+                print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@2")
+                return funcionarios[i]
+
+
+    #letra b) ANTIGA
+    # def busca_codigo(self, lista, cod: str):
+    #     #cod = cod[2:] #retira sufixo indicativo de binario 0b||1b
+    #     comparacoes = 0
+    #     start_time = time.time() #Inicia o timer para contar o tempo de execucao do algoritmo
+        
+    #     for i in range(100):
+    #         #if "|" in lista[i][1]: #checa se o numero eh de um digito e faz a correcao de busca
+    #         #    if cod == lista[i][0]:
+    #         #        print("Dados do funcionario: ", lista[i], "\nTotal de comparacoes: ", comparacoes, "\nTempo gasto: %.10f" % (time.time() - start_time))
+    #         #        return lista[i]
+    #         if cod == lista[i][:2]:
+    #             print(lista[i][:2])
+    #             print("Dados do funcionario: ", lista[i], "\nTotal de comparacoes: ", comparacoes, "\nTempo gasto: %.10f" % (time.time() - start_time))
+    #             return lista[i]
+    #         else:
+    #             comparacoes = comparacoes + 1
+    #         if i == 99:
+    #             return "Codigo de funcionario invalido ou inexistente!"
             
 
-            #arq_funcao.write(names.get_full_name() + "@") #nome
-            #arq_funcao.write(str(random.randint(10000000000, 99999999999))) #cpf
-            #arq_funcao.write = (str(random.randint(1, 31)) + str(random.randint(1, 12)) + str(random.randint(1930, 2022))) #data_nascimento
-            #arq_funcao.write = (str(random.randint(1200, 100000))) #salario
+    #         #arq_funcao.write(names.get_full_name() + "@") #nome
+    #         #arq_funcao.write(str(random.randint(10000000000, 99999999999))) #cpf
+    #         #arq_funcao.write = (str(random.randint(1, 31)) + str(random.randint(1, 12)) + str(random.randint(1930, 2022))) #data_nascimento
+    #         #arq_funcao.write = (str(random.randint(1200, 100000))) #salario
