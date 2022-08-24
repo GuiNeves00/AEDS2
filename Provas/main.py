@@ -49,19 +49,22 @@ with open("data.dat", "rb+") as arq:
         func.data_nascimento = aux[3]
         funcionarios.append(func)
 
+    #Ordena os codigos dos funcionarios, passando-os para uma lista
     codigos=[bin(int(ele)) for ele in aux_cod]
     codigos=[int(ele,0) for ele in codigos]
     codigos.sort()
 
+    #Apaga todo o conteudo do arquivo
     arq.seek(0)
     arq.truncate()
 
+    #Reescreve o arquivo, porem ordenado com base na chave codigo
     j = 0
     i = 0
-    while(i < 100):
+    while(i < 100 and  j < 100):
         #print("func.cod: ", funcionarios[i].cod, "cod_ord: ", codigos[j])
-        print(i)
-        if int(funcionarios[i].cod, 2) == codigos[j]:
+        print("i = ", i, "j = ", j)
+        if int(funcionarios[i].cod) == codigos[j]:
             print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
             arq.write(str(funcionarios[i].cod).encode())
             arq.write("|".encode())
@@ -75,7 +78,8 @@ with open("data.dat", "rb+") as arq:
             arq.write("|".encode())
             arq.write("\n".encode())
             j = j + 1
-            i = j
+            i = 0
+            continue
         i = i + 1
 
 imprime_funcionarios(funcionarios)
