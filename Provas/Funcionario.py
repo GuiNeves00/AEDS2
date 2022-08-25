@@ -52,7 +52,6 @@ class Funcionario:
         arq_funcao.write(bin(dn_mes)[2:].encode())
         arq_funcao.write("/".encode())
         arq_funcao.write(bin(dn_ano)[2:].encode())
-        arq_funcao.write("/".encode())
         arq_funcao.write("|".encode())
         self.data_nascimento = str(dn_dia) + "/" + str(dn_mes) + "/" + str(dn_ano)
 
@@ -73,14 +72,16 @@ class Funcionario:
         return aux
 
     #letra b) ATUALIZADA
-    def busca_codigo(self, funcionarios, cod):
-        '''Recebe uma lista de objetos funcionario, um codigo em binario, faz a busca pelo funcionario deste codigo e o retorna (objeto)'''
+    def busca_sequencial(self, funcionarios, cod):
+        '''Recebe uma lista de objetos funcionario NÃO ORDENADA por nenhuma chave, um codigo em binario, faz a busca pelo funcionario deste codigo e o retorna (objeto)'''
+        start_time = time.time()
+        comparacoes = 0
         cod = cod[2:]
         for i in range(100):
-            print("cod_func: ", funcionarios[i].cod, "cod_busca: ", cod)
             if funcionarios[i].cod == cod:
-                print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@2")
+                print("Tempo gasto: %.10f" % (time.time() - start_time), "Comparacoes feitas: ", comparacoes)
                 return funcionarios[i]
+            comparacoes = comparacoes + 1
 
 
     #letra b) ANTIGA
@@ -102,9 +103,3 @@ class Funcionario:
     #             comparacoes = comparacoes + 1
     #         if i == 99:
     #             return "Codigo de funcionario invalido ou inexistente!"
-            
-
-    #         #arq_funcao.write(names.get_full_name() + "@") #nome
-    #         #arq_funcao.write(str(random.randint(10000000000, 99999999999))) #cpf
-    #         #arq_funcao.write = (str(random.randint(1, 31)) + str(random.randint(1, 12)) + str(random.randint(1930, 2022))) #data_nascimento
-    #         #arq_funcao.write = (str(random.randint(1200, 100000))) #salario
