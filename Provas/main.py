@@ -1,8 +1,9 @@
+import code
 import Funcionario as Func
 import time
 import linecache
 
-#FUNCOES-----------------------------------------------------
+#FUNCOES--------------------------------------------------------------------------------------
 def imprime_funcionarios(funcionarios):
     '''Recebe lista de objeto funcionario e imprime'''
     for i in funcionarios:
@@ -35,13 +36,13 @@ def busca_sequencial(nome_arq, cod):
             else:
                 comparacoes = comparacoes + 1
 
-#letra c)
+#letra c) KeySorting
 def ordena_arquivo(nome_arq, aux_codF, funcionariosF):
     '''Recebe um arquivo NAO ORDENADO, uma lista de codigos e uma lista de funcionarios'''
     with open(nome_arq, "rb+") as arq:
         start_time = time.time() #Para obter o tempo de execucao
 
-        #Ordenando codigos
+        #Obtendo codigos em lista e ordenando-os
         codigos=[bin(int(ele)) for ele in aux_codF]
         codigos=[int(ele,0) for ele in codigos]
         codigos.sort()
@@ -116,11 +117,73 @@ def busca_binaria_L(nome_arq, cod, tam):
             return linha
     linecache.clearcache()
     return False
-#------------------------------------------------------------
 
-print("---------------------------------------------------------------------------------")
-print("GERANDO BASE DE DADOS...")
-obj = gerar_base_de_dados("data.dat")
+#Insertion Sort: ponto extra
+def ordena_insertion_sort(nome_arq, aux_codF, funcionariosF):
+    with open(nome_arq, "rb+") as arq:
+        start_time = time.time() #Para obter o tempo de execucao
+        comparacoes = 0
+
+        #Obtendo codigos em lista
+        codigos=[bin(int(ele)) for ele in aux_codF]
+        codigos=[int(ele,0) for ele in codigos]
+
+        #Apagando todos os dados do arquivo para reescrevelos ja ordenados
+        arq.seek(0, 0)
+        arq.truncate()
+
+        #INSERTION SORT
+        for index in range(1, len(codigos)):
+            value = codigos[index]
+            i = index -1
+            while i >= 0:
+                if value < codigos[i]:
+                    codigos[i+1] = codigos[i]
+                    codigos[i] = value
+                    i = i - 1
+                    comparacoes = comparacoes + 1
+                else:
+                    break
+        print("Insertion Sort concluído!")
+        print("Tempo de Ordernacao: %.10f" % (time.time() - start_time))
+        print("Comparacoes do Insertion Sort: ", comparacoes)
+        print("Escrevendo arquivo ordenado...")
+        start_time = time.time()
+
+        #Escrevendo arquivo ordenado
+        j = 0
+        i = 0
+        while(i < 100 and  j < 100):
+            if int(funcionariosF[i].cod) == codigos[j]:
+                arq.write(str(funcionariosF[i].cod).encode())
+                arq.write("|".encode())
+                arq.write(str(funcionariosF[i].nome).encode())
+                arq.write("|".encode())
+                arq.write(str(funcionariosF[i].cpf).encode())
+                arq.write("|".encode())
+                arq.write(str(funcionariosF[i].data_nascimento).encode())
+                arq.write("|".encode())
+                arq.write(str(funcionariosF[i].salario).encode())
+                arq.write("|".encode())
+                if j < 99:
+                    arq.write("\n".encode())
+                j = j + 1
+                i = 0
+                continue
+            i = i + 1
+        print("Arquivo ordenado com sucesso!")
+        print("Tempo de Ordernacao: %.10f" % (time.time() - start_time)) #Obtem o tempo de execucao e imprime
+#---------------------------------------------------------------------------------------------
+#PRINCIPAL------------------------------------------------------------------------------------
+menu = 0
+while(menu != 1):
+    menu = int(print("MENU - DIGITE A OPCAO DESEJADA\n1 - Gerar base de dados"))
+    if menu == 1:
+        print("---------------------------------------------------------------------------------")
+        print("GERANDO BASE DE DADOS...")
+        obj = gerar_base_de_dados("data.dat")
+    else:
+        print("Opcao invalida")
 
 funcionarios = [] #armazena os funcionarios
 aux_cod = []
@@ -142,14 +205,17 @@ for i in arq.readlines():
 
 print("---------------------------------------------------------------------------------")
 print("BUSCA SEQUENCIAL (ARQUIVO NAO ORDENADO):")
-print(busca_sequencial("data.dat", bin(1)))
+#print(busca_sequencial("data.dat", bin(1)))
 print("---------------------------------------------------------------------------------")
 print("ORDENANDO ARQUIVO (KEYSORT)...")
-ordena_arquivo("data.dat", aux_cod, funcionarios)
+#ordena_arquivo("data.dat", aux_cod, funcionarios)
 print("---------------------------------------------------------------------------------")
 print("BUSCA BINARIA")
-print(busca_binaria_G("data.dat", bin(99), 100))
+#print(busca_binaria_G("data.dat", bin(99), 100))
 print("---------------------------------------------------------------------------------")
-
+print("INSERTION_SORT:")
+ordena_insertion_sort("data.dat", aux_cod, funcionarios)
+print("---------------------------------------------------------------------------------")
 arq.close() #FECHA ARQUIVO
 #print(obj.busca_sequencial(funcionarios, bin(36)).nome)
+#--------------------------------------------------------------------------------------------
