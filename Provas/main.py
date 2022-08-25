@@ -1,59 +1,47 @@
-import linecache
-from posixpath import split
-from tracemalloc import start
 import Funcionario as Func
 import time
-import os
+import linecache
 
 #FUNCOES-----------------------------------------------------
-def gera_base_de_dados(nome_arq, obj):
-    lista = []
-    if os.stat(nome_arq).st_size > 0:
-        print("Base de dados ja foi criada anteriormente!!")
-        opcao = int(input(print("Digite:\n1 = Criar nova base de dados\n2 = Finalizar programa")))
-        if opcao == 1:
-            f = open(nome_arq, "r+")
-            f.seek(0)
-            f.truncate()
-            f.close()
-            
-            for i in range(100):
-                lista.append(obj.gera_funcionario(nome_arq))
-                return lista
-        if opcao == 2:
-            exit()
-    #else:
-        #for i in range(100):
-            #lista.append(obj.gera_funcionario(nome_arq))
-    #return lista
-
 def imprime_funcionarios(funcionarios):
+    '''Recebe lista de objeto funcionario e imprime'''
     for i in funcionarios:
         print(i.cod, "|", i.nome, "|", i.cpf, "|", i.data_nascimento, "|", i.salario)
 
-def busca_binaria(cod, arq, tam):
-    arq.seek(0, 0)
-    cima = 0
-    baixo = tam-1
-    print("cod = ", cod)
-    while(cima <= baixo):
-        print("cima = ", cima, "baixo = ", baixo)
-        meio = round((cima+baixo)/2)
-        print("meio = ", meio)
-        #arq.seek(int(meio), 0)
-        f = arq.readlines()
-        print("f antes = ", f)
-        aux_f = f.split("|")
-        print("aux_f = ", aux_f)
-        #print("f[0][2:] = ", f[0][2:])
-        if cod == f[0][2:]:
-            return f
-        elif cod > f[0][2:]:
-            cima = meio + 1
+def busca_binaria(nome_arq, cod, tam):
+    '''Busca Binaria'''
+    left = 0
+    right = tam
+    while(left <= right):
+        middle = int((left+right)//2)
+        func = linecache.getline(nome_arq, middle)
+        func = func.split("|")
+        if int(cod[2:]) == int(func[0]):
+            return func
+        elif int(func[0]) < int(cod[2:]):
+            left = middle + 1
         else:
-            baixo = meio - 1
-    
-    return "chegou no return final"
+            right = middle - 1
+    return None
+
+def busca_binaria_LUCAS(nome_arq, cod, tam):
+    '''Busca Binaria'''
+    left = 0
+    right = tam+1
+    pos_act = tam//2
+    linha = linecache.getline(nome_arq, pos_act) 
+    cod_act = int(linha.split('|')[0], base = 2)
+    while (left < (right-1)):
+        if cod < cod_act:
+            right = pos_act
+        elif cod > cod_act:
+            left = pos_act
+        pos_act = (right+left)//2
+        linha = linecache.getline(nome_arq, pos_act) 
+        cod_act = int(linha.split('|')[0], base = 2)
+        if cod_act == cod:
+            return linha
+    return False
 
 #------------------------------------------------------------
 
@@ -102,7 +90,8 @@ with open("data.dat", "rb+") as arq:
             arq.write("|".encode())
             arq.write(str(funcionarios[i].salario).encode())
             arq.write("|".encode())
-            arq.write("\n".encode())
+            if j < 99:
+                arq.write("\n".encode())
             j = j + 1
             i = 0
             continue
@@ -116,14 +105,18 @@ with open("data.dat", "rb+") as arq:
     arq.seek(0, 2)
     tam_arq = arq.tell()
     print("TAMANHO DO ARQUIVO = ", tam_arq)
-    print(busca_binaria(bin(36), arq, 100))
+    arq.seek(0, 0)
 
 
+print("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
 print(aux_dados.busca_sequencial(funcionarios, bin(36)).nome)
+print("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
 
+#with open("data.dat", "rb+") as arq:
+#particular_line = linecache.getline('data.dat', 50) 
+#print(particular_line)
 
-
-
+print(busca_binaria_LUCAS("data.dat", 99, 100))
 
 
 #imprime_funcionarios(funcionarios)
