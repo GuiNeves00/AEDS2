@@ -8,7 +8,6 @@
 
 import names
 import random
-import time
 
 class Funcionario:
     def __init__(self, cod = 0, nome = None, cpf = 0, data_nascimento = 0, salario = 0):
@@ -20,8 +19,9 @@ class Funcionario:
 
     rnd_array = [i for i in range(100)] #vetor para gerar codigos aleatorios
 
-    #letra a)
+    #letra a).1
     def gera_funcionario(self, nome_arq):
+        '''Recebe o nome do arquivo e adiciona os dados de um funcionario'''
         aux = 0
         arq_funcao = open(nome_arq, "rb+")
         arq_funcao.seek(0, 2) #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! FIX
@@ -70,36 +70,3 @@ class Funcionario:
         arq_funcao.seek(0, 2)#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! FIX
         arq_funcao.close()
         return aux
-
-    #letra b) ATUALIZADA
-    def busca_sequencial(self, funcionarios, cod):
-        '''Recebe uma lista de objetos funcionario NÃO ORDENADA por nenhuma chave, um codigo em binario, faz a busca pelo funcionario deste codigo e o retorna (objeto)'''
-        start_time = time.time()
-        comparacoes = 0
-        cod = cod[2:]
-        for i in range(100):
-            if funcionarios[i].cod == cod:
-                print("Tempo gasto: %.10f" % (time.time() - start_time), "Comparacoes feitas: ", comparacoes)
-                return funcionarios[i]
-            comparacoes = comparacoes + 1
-
-
-    #letra b) ANTIGA
-    # def busca_codigo(self, lista, cod: str):
-    #     #cod = cod[2:] #retira sufixo indicativo de binario 0b||1b
-    #     comparacoes = 0
-    #     start_time = time.time() #Inicia o timer para contar o tempo de execucao do algoritmo
-        
-    #     for i in range(100):
-    #         #if "|" in lista[i][1]: #checa se o numero eh de um digito e faz a correcao de busca
-    #         #    if cod == lista[i][0]:
-    #         #        print("Dados do funcionario: ", lista[i], "\nTotal de comparacoes: ", comparacoes, "\nTempo gasto: %.10f" % (time.time() - start_time))
-    #         #        return lista[i]
-    #         if cod == lista[i][:2]:
-    #             print(lista[i][:2])
-    #             print("Dados do funcionario: ", lista[i], "\nTotal de comparacoes: ", comparacoes, "\nTempo gasto: %.10f" % (time.time() - start_time))
-    #             return lista[i]
-    #         else:
-    #             comparacoes = comparacoes + 1
-    #         if i == 99:
-    #             return "Codigo de funcionario invalido ou inexistente!"
