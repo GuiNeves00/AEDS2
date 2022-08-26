@@ -1,4 +1,3 @@
-import code
 import Funcionario as Func
 import time
 import linecache
@@ -15,7 +14,7 @@ def gerar_base_de_dados(nome_arq):
     obj_func = Func.Funcionario()
     for i in range(100):
         obj_func.gera_funcionario(nome_arq)
-    print("Base de dados gerada com sucesso")
+    print("Base de dados gerada com sucesso!")
     return obj_func
 
 #letra b)
@@ -72,13 +71,14 @@ def ordena_arquivo(nome_arq, aux_codF, funcionariosF):
                 i = 0
                 continue
             i = i + 1
-    print("Arquivo ordenado com sucesso!!")
+    print("Arquivo ordenado com sucesso!")
     print("Tempo de Ordernacao: %.10f" % (time.time() - start_time)) #Obtem o tempo de execucao e imprime
-
 #letra d)
 def busca_binaria_G(nome_arq, cod: bin, tam):
     '''Recebe um arquivo ORDENADO (pela chave cod), o codigo (em binario) a ser buscado e o tamanho do arquivo em linhas (padrao 100). 
     Retorna os dados do funcionario em formato de LISTA, ou caso nao o encontre retorna falso'''
+    start_time = time.time() #Para obter o tempo de execucao
+    comparacoes = 0
     left = 0
     right = tam
     while(left <= right):
@@ -86,19 +86,27 @@ def busca_binaria_G(nome_arq, cod: bin, tam):
         func = linecache.getline(nome_arq, middle)
         func = func.split("|")
         if int(cod[2:]) == int(func[0]):
+            comparacoes = comparacoes + 1
             linecache.clearcache()
+            print("Tempo de Execucao: %.10f" % (time.time() - start_time)) #Obtem o tempo de execucao e imprime
+            print("Total de comparacoes: ", comparacoes)
             return func
         elif int(func[0]) < int(cod[2:]):
+            comparacoes = comparacoes + 1
             left = middle + 1
         else:
+            comparacoes = comparacoes + 1
             right = middle - 1
     linecache.clearcache()
+    print("Tempo de Execucao: %.10f" % (time.time() - start_time)) #Obtem o tempo de execucao e imprime
     return False
 
 #letra d)
 def busca_binaria_L(nome_arq, cod, tam):
     '''Recebe um arquivo ORDENADO (pela chave cod), o codigo a ser buscado e o tamanho do arquivo em linhas (padrao 100). 
     Retorna os dados do funcionario em formato de string, ou caso nao o encontre retorna falso'''
+    start_time = time.time() #Para obter o tempo de execucao
+    comparacoes = 0
     left = 0
     right = tam+1
     pos_act = tam//2
@@ -114,8 +122,12 @@ def busca_binaria_L(nome_arq, cod, tam):
         cod_act = int(linha.split('|')[0], base = 2)
         if cod_act == cod:
             linecache.clearcache()
+            print("Tempo de Execucao: %.10f" % (time.time() - start_time)) #Obtem o tempo de execucao e imprime
+            print("Total de comparacoes: ", comparacoes)
             return linha
     linecache.clearcache()
+    print("Tempo de Execucao: %.10f" % (time.time() - start_time)) #Obtem o tempo de execucao e imprime
+    print("Total de comparacoes: ", comparacoes)
     return False
 
 #Insertion Sort: ponto extra
@@ -172,50 +184,118 @@ def ordena_insertion_sort(nome_arq, aux_codF, funcionariosF):
                 continue
             i = i + 1
         print("Arquivo ordenado com sucesso!")
-        print("Tempo de Ordernacao: %.10f" % (time.time() - start_time)) #Obtem o tempo de execucao e imprime
+        print("Tempo de Ordernacao (Arquivo): %.10f" % (time.time() - start_time)) #Obtem o tempo de execucao e imprime
 #---------------------------------------------------------------------------------------------
 #PRINCIPAL------------------------------------------------------------------------------------
 menu = 0
 while(menu != 1):
-    menu = int(print("MENU - DIGITE A OPCAO DESEJADA\n1 - Gerar base de dados"))
+    menu = int(input("MENU - DIGITE A OPCAO DESEJADA\n1 - Gerar base de dados\t"))
     if menu == 1:
         print("---------------------------------------------------------------------------------")
         print("GERANDO BASE DE DADOS...")
         obj = gerar_base_de_dados("data.dat")
+        funcionarios = [] #armazena os funcionarios
+        aux_cod = []
+
+        arq = open("data.dat", "rb+") #ABRE ARQUIVO
+
+        #Gera uma lista de funcionarios baseada no arquivo
+        for i in arq.readlines():
+            func = Func.Funcionario()
+            i = str(i)
+            aux = i.split("|")
+            func.cod = aux[0][2:]
+            aux_cod.append(aux[0][2:])
+            func.nome = aux[1]
+            func.salario = aux[4]
+            func.cpf = aux[2]
+            func.data_nascimento = aux[3]
+            funcionarios.append(func)
     else:
         print("Opcao invalida")
 
-funcionarios = [] #armazena os funcionarios
-aux_cod = []
+while (menu != 2):
+    menu = int(input("\nMENU - DIGITE A OPCAO DESEJADA\n2 - Busca sequencial (Arquivo nao ordenado)\t"))
+    if menu == 2:
+        buscar = int(input("Qual codigo do funcionario deseja buscar (0 a 99)?\t"))
+        print("---------------------------------------------------------------------------------")
+        print("BUSCA SEQUENCIAL (ARQUIVO NAO ORDENADO):")
+        print(busca_sequencial("data.dat", bin(buscar)))
+    else:
+        print("Opcao Invalida")
 
-arq = open("data.dat", "rb+") #ABRE ARQUIVO
+while(True):
+    menu = int(input("\nMENU - DIGITE A OPCAO DESEJADA\n3 - Ordenar arquivo (KeySort)\n4 - Ordenar arquivo (InsertionSort)\t"))
+    if menu == 4:
+        print("---------------------------------------------------------------------------------")
+        print("INSERTION_SORT:")
+        ordena_insertion_sort("data.dat", aux_cod, funcionarios)
+        print("---------------------------------------------------------------------------------")
+        break   
+    elif menu == 3:
+        print("---------------------------------------------------------------------------------")
+        print("ORDENANDO ARQUIVO (KEYSORT)...")
+        ordena_arquivo("data.dat", aux_cod, funcionarios)
+        break
+    else:
+        print("Opcao Invalida")
 
-#Gera uma lista de funcionarios baseada no arquivo
-for i in arq.readlines():
-    func = Func.Funcionario()
-    i = str(i)
-    aux = i.split("|")
-    func.cod = aux[0][2:]
-    aux_cod.append(aux[0][2:])
-    func.nome = aux[1]
-    func.salario = aux[4]
-    func.cpf = aux[2]
-    func.data_nascimento = aux[3]
-    funcionarios.append(func)
+while(menu != 5):
+    opcao = 0
+    flag = False
+    menu = int(input("\nMENU - DIGITE A OPCAO DESEJADA\n5 - Busca Binaria\n6 - Busca sequencial (Arquivo ordenado)\t"))
+    if menu == 5:
+        while(opcao != 7 or opcao != 8):
+            opcao = int(input("Deseja buscar pelo mesmo funcionario ou um novo?\n7 - Mesmo Funcionario\n8 - Outro\n9 - Encerrar Programa\t"))
+            if opcao == 7:
+                print("---------------------------------------------------------------------------------")
+                print("BUSCA BINARIA")
+                print(busca_binaria_G("data.dat", bin(buscar), 100))
+            elif opcao == 8:
+                buscar = int(input("Qual codigo do funcionario deseja buscar (0 a 99)?\t"))
+                print("BUSCA BINARIA")
+                print(busca_binaria_G("data.dat", bin(buscar), 100))
+            elif opcao == 9:
+                flag = True
+                break
+            else:
+                print("Opcao invalida!")
+    if menu == 6:
+        opcao = int(input("Deseja buscar pelo mesmo funcionario ou um novo?\n7 - Mesmo Funcionario\n8 - Outro\n9 - Encerrar Programa\t"))
+        if opcao == 7:
+            print("---------------------------------------------------------------------------------")
+            print("BUSCA SEQUENCIAL (ARQUIVO ORDENADO):")
+            print(busca_sequencial("data.dat", bin(buscar)))
+        elif opcao == 8:
+            buscar = int(input("Qual codigo do funcionario deseja buscar (0 a 99)?\t"))
+            print("---------------------------------------------------------------------------------")
+            print("BUSCA SEQUENCIAL (ARQUIVO ORDENADO):")
+            print(busca_sequencial("data.dat", bin(buscar)))
+        elif opcao == 9:
+            flag = True
+            break
+        else:
+            print("Opcao invalida!")
+    if flag == True:
+        break
 
-print("---------------------------------------------------------------------------------")
-print("BUSCA SEQUENCIAL (ARQUIVO NAO ORDENADO):")
-#print(busca_sequencial("data.dat", bin(1)))
-print("---------------------------------------------------------------------------------")
-print("ORDENANDO ARQUIVO (KEYSORT)...")
-#ordena_arquivo("data.dat", aux_cod, funcionarios)
-print("---------------------------------------------------------------------------------")
-print("BUSCA BINARIA")
-#print(busca_binaria_G("data.dat", bin(99), 100))
-print("---------------------------------------------------------------------------------")
-print("INSERTION_SORT:")
-ordena_insertion_sort("data.dat", aux_cod, funcionarios)
-print("---------------------------------------------------------------------------------")
-arq.close() #FECHA ARQUIVO
-#print(obj.busca_sequencial(funcionarios, bin(36)).nome)
+arq.seek(0, 0)
+arq.truncate()
+arq.close()
+
+# print("---------------------------------------------------------------------------------")
+# print("BUSCA SEQUENCIAL (ARQUIVO NAO ORDENADO):")
+# #print(busca_sequencial("data.dat", bin(1)))
+# print("---------------------------------------------------------------------------------")
+# print("ORDENANDO ARQUIVO (KEYSORT)...")
+# #ordena_arquivo("data.dat", aux_cod, funcionarios)
+# print("---------------------------------------------------------------------------------")
+# print("BUSCA BINARIA")
+# #print(busca_binaria_G("data.dat", bin(99), 100))
+# print("---------------------------------------------------------------------------------")
+# print("INSERTION_SORT:")
+# ordena_insertion_sort("data.dat", aux_cod, funcionarios)
+# print("---------------------------------------------------------------------------------")
+# arq.close() #FECHA ARQUIVO
+# #print(obj.busca_sequencial(funcionarios, bin(36)).nome)
 #--------------------------------------------------------------------------------------------
