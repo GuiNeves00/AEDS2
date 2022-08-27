@@ -114,13 +114,16 @@ def busca_binaria_L(nome_arq, cod, tam):
     cod_act = int(linha.split('|')[0], base = 2)
     while (left < (right-1)):
         if cod < cod_act:
+            comparacoes = comparacoes + 1
             right = pos_act
         elif cod > cod_act:
+            comparacoes = comparacoes + 1
             left = pos_act
         pos_act = (right+left)//2
         linha = linecache.getline(nome_arq, pos_act) 
         cod_act = int(linha.split('|')[0], base = 2)
         if cod_act == cod:
+            comparacoes = comparacoes + 1
             linecache.clearcache()
             print("Tempo de Execucao: %.10f" % (time.time() - start_time)) #Obtem o tempo de execucao e imprime
             print("Total de comparacoes: ", comparacoes)
