@@ -250,11 +250,11 @@ while(menu != 5):
             if opcao == 7:
                 print("---------------------------------------------------------------------------------")
                 print("BUSCA BINARIA")
-                print(busca_binaria_G("data.dat", bin(buscar), 100))
+                print(busca_binaria_L("data.dat", buscar, 100))
             elif opcao == 8:
                 buscar = int(input("Qual codigo do funcionario deseja buscar (0 a 99)?\t"))
                 print("BUSCA BINARIA")
-                print(busca_binaria_G("data.dat", bin(buscar), 100))
+                print(busca_binaria_L("data.dat", buscar, 100))
             elif opcao == 9:
                 flag = True
                 break
@@ -282,20 +282,3 @@ while(menu != 5):
 arq.seek(0, 0)
 arq.truncate()
 arq.close()
-
-# print("---------------------------------------------------------------------------------")
-# print("BUSCA SEQUENCIAL (ARQUIVO NAO ORDENADO):")
-# #print(busca_sequencial("data.dat", bin(1)))
-# print("---------------------------------------------------------------------------------")
-# print("ORDENANDO ARQUIVO (KEYSORT)...")
-# #ordena_arquivo("data.dat", aux_cod, funcionarios)
-# print("---------------------------------------------------------------------------------")
-# print("BUSCA BINARIA")
-# #print(busca_binaria_G("data.dat", bin(99), 100))
-# print("---------------------------------------------------------------------------------")
-# print("INSERTION_SORT:")
-# ordena_insertion_sort("data.dat", aux_cod, funcionarios)
-# print("---------------------------------------------------------------------------------")
-# arq.close() #FECHA ARQUIVO
-# #print(obj.busca_sequencial(funcionarios, bin(36)).nome)
-#--------------------------------------------------------------------------------------------
